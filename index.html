@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Valentine</title>
+
+  <!-- Cute Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #ffd6e8;
+      font-family: 'Fredoka', sans-serif;
+      overflow: hidden;
+    }
+
+    /* ✨ Cute Border Wrapper */
+    .border-wrapper {
+      width: 90%;
+      height: 90%;
+      border: 8px solid #ff4d88;
+      border-radius: 30px;
+      box-shadow: 0 0 25px rgba(255, 77, 136, 0.4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      background-color: #ffeaf3;
+    }
+
+    .container {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .valentine-gif {
+      width: 220px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-size: 36px;
+      margin-bottom: 20px;
+      color: #ff2e75;
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 18px;
+      margin: 10px;
+      cursor: pointer;
+      border: none;
+      border-radius: 12px;
+      transition: 0.2s ease;
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    .yes-btn {
+      background-color: #ff4d88;
+      color: white;
+    }
+
+    .yes-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .no-btn {
+      background-color: white;
+    }
+
+    .result-container {
+      display: none;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+  </style>
+</head>
+
+<body>
+
+  <canvas id="confetti"></canvas>
+
+  <!-- 💖 BORDER WRAPPER START -->
+  <div class="border-wrapper">
+
+    <!-- QUESTION SCREEN -->
+    <div class="question-container container">
+      <img src="mochi1.gif" class="valentine-gif">
+      <h2>Will you pretty please be my valentine? 💘</h2>
+      <button class="yes-btn js-yes-btn">Yes</button>
+      <button class="no-btn js-no-btn">No</button>
+    </div>
+
+    <!-- RESULT SCREEN -->
+    <div class="result-container container">
+      <img src="mochi2.gif" class="valentine-gif">
+      <h2>Yay! Booking a trip to Berkeley now ✈️💖</h2>
+    </div>
+
+  </div>
+  <!-- 💖 BORDER WRAPPER END -->
+
+  <script>
+    const noBtn = document.querySelector(".js-no-btn");
+    const yesBtn = document.querySelector(".js-yes-btn");
+    const questionContainer = document.querySelector(".question-container");
+    const resultContainer = document.querySelector(".result-container");
+
+    noBtn.addEventListener("mouseover", () => {
+      noBtn.style.position = "fixed";
+
+      const padding = 20;
+      const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+      const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
+    });
+
+    yesBtn.addEventListener("click", () => {
+      questionContainer.style.display = "none";
+      resultContainer.style.display = "block";
+      startConfetti();
+    });
+
+    // 🎉 CONFETTI
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const confettiPieces = [];
+
+    function createConfetti() {
+      for (let i = 0; i < 150; i++) {
+        confettiPieces.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          size: Math.random() * 8 + 4,
+          speed: Math.random() * 3 + 2,
+          color: `hsl(${Math.random() * 360}, 100%, 60%)`
+        });
+      }
+    }
+
+    function drawConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      confettiPieces.forEach(piece => {
+        ctx.fillStyle = piece.color;
+        ctx.fillRect(piece.x, piece.y, piece.size, piece.size);
+        piece.y += piece.speed;
+
+        if (piece.y > canvas.height) {
+          piece.y = -10;
+        }
+      });
+
+      requestAnimationFrame(drawConfetti);
+    }
+
+    function startConfetti() {
+      createConfetti();
+      drawConfetti();
+    }
+  </script>
+
+</body>
+</html>
